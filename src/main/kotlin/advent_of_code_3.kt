@@ -1,4 +1,5 @@
 
+
 // --- Día 3: Relaciones de Engranajes ---
 
 // Tú y el Elfo finalmente llegan a una estación de teleférico; él dice que el teleférico los llevará hasta la
@@ -40,6 +41,7 @@
 // Por supuesto, el esquema real del motor es mucho más grande. ¿Cuál es la suma de todos los números de parte
 // en el esquema del motor?
 
+
 fun main() {
     val resultadoPuzle = readInput("Day03").firstOrNull() ?: ""
 
@@ -47,27 +49,27 @@ fun main() {
     println("La suma de todos los números de parte en el esquema del motor es: $sumaDeCadenaDeNumeros")
 }
 
-fun calcularSumaCadenaNumeros(esquemaMotor: String): Int {
+fun calcularSumaCadenaNumeros(esquemaMotor: String): String {
     val lineas = esquemaMotor.lines()
     var suma = 0
 
     for (i in 0 until lineas.size) {
         for (j in 0 until lineas[i].length) {
             if (esNumeroDeParte(lineas, i, j)) {
-                // Agrega el número de parte a la suma
-                suma += lineas[i][j].toString().toInt()
+
+                suma += Character.getNumericValue(lineas[i][j])
             }
         }
     }
 
-    return suma
+    return suma.toString()
 }
 
 fun esNumeroDeParte(lineas: List<String>, i: Int, j: Int): Boolean {
     val simbolo = lineas[i][j]
 
-    if (simbolo == '.') {
-        return false // Los puntos no cuentan como símbolos
+    if (simbolo == '.' || simbolo == '*') {
+        return false
     }
 
     // Verificar la vecindad del símbolo
@@ -76,8 +78,10 @@ fun esNumeroDeParte(lineas: List<String>, i: Int, j: Int): Boolean {
             val fila = i + x
             val columna = j + y
 
-            // Condicion para asegurarse de no salirse de los límites del array
-            if (fila in 0 until lineas.size && columna in 0 until lineas[fila].length && lineas[fila][columna] != '.') {
+            // Condición para asegurarse de no salirse de los límites del array
+            if (fila in 0 until lineas.size && columna in 0 until lineas[fila].length &&
+                (lineas[fila][columna] == '*' || lineas[fila][columna].isDigit())
+            ) {
                 return true
             }
         }
