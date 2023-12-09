@@ -43,42 +43,46 @@
 
 
 fun main() {
-    val resultadoPuzle = readInput("Day03").firstOrNull() ?: ""
+    val lineas = readInput("Day03")
+    val totalLineas = mutableListOf<Int>()
+    var sumaAcumulativa = 0
 
-    val sumaDeCadenaDeNumeros = calcularSumaCadenaNumeros(resultadoPuzle)
-    println("La suma de todos los números de parte en el esquema del motor es: $sumaDeCadenaDeNumeros")
+    for (linea in lineas) {
+        val sumaDeCadenaDeNumeros = calcularSumaCadenaNumeros(linea)
+        sumaAcumulativa += sumaDeCadenaDeNumeros
+        totalLineas.add(sumaAcumulativa)
+    }
+
+    val sumaDeLista = totalLineas
+
+    println("Suma total de la lista: $sumaDeLista")
 }
 
-fun calcularSumaCadenaNumeros(esquemaMotor: String): String {
+fun calcularSumaCadenaNumeros(esquemaMotor: String): Int {
     val lineas = esquemaMotor.lines()
     var suma = 0
 
     for (i in 0 until lineas.size) {
         for (j in 0 until lineas[i].length) {
-            if (esNumeroDeParte(lineas, i, j)) {
+            val simbolo = lineas[i][j]
 
-                suma += Character.getNumericValue(lineas[i][j])
+            if (simbolo.isDigit()) {
+                if (esNumeroDeParte(lineas, i, j)) {
+                    suma += Character.getNumericValue(simbolo)
+                }
             }
         }
     }
 
-    return suma.toString()
+    return suma
 }
 
 fun esNumeroDeParte(lineas: List<String>, i: Int, j: Int): Boolean {
-    val simbolo = lineas[i][j]
-
-    if (simbolo == '.' || simbolo == '*') {
-        return false
-    }
-
-    // Verificar la vecindad del símbolo
     for (x in -1..1) {
         for (y in -1..1) {
             val fila = i + x
             val columna = j + y
 
-            // Condición para asegurarse de no salirse de los límites del array
             if (fila in 0 until lineas.size && columna in 0 until lineas[fila].length &&
                 (lineas[fila][columna] == '*' || lineas[fila][columna].isDigit())
             ) {
