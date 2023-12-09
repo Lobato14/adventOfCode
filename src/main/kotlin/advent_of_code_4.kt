@@ -55,7 +55,6 @@
 
 // Siéntate en la gran pila de coloridas tarjetas. ¿Cuántos puntos valen en total?
 
-
 // Parte 2
 
 // Justo cuando estás a punto de informar tus hallazgos al Elfo, uno de ustedes se da cuenta de que las reglas
@@ -137,7 +136,7 @@ fun calcularPuntosParte1(cartas: List<String>): Int {
         val numerosGanadores = partes[0].split(" ").map { it.toInt() }
         val misNumeros = partes[1].split(" ").map { it.toInt() }
 
-        // Calcular el puntaje para esta carta según las reglas de la parte 1
+        // Calcular el puntaje para la carta
         var puntaje = 0
         for (numero in numerosGanadores) {
             if (misNumeros.contains(numero)) {
