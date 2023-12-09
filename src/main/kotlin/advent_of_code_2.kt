@@ -1,5 +1,7 @@
 // --- Día 2: Cube Conundrum ---
 
+// Parte 1
+
 // Eres lanzado a lo alto de la atmósfera. El vértice de tu trayectoria apenas alcanza la superficie de una gran isla
 // que flota en el cielo. Aterrizas suavemente en un mullido montón de hojas. Hace bastante frío, pero no ves mucha
 // nieve. Un elfo corre a saludarte.
@@ -40,6 +42,36 @@
 
 // Determina qué juegos habrían sido posibles si la bolsa se hubiera cargado sólo con 12 cubos rojos, 13 cubos verdes
 // y 14 cubos azules. ¿Cuál es la suma de los ID de esos juegos?
+
+// Parte 2
+
+
+// El Elfo dice que han dejado de producir nieve porque no están recibiendo agua. No está seguro de por qué se detuvo
+// el agua; sin embargo, puede mostrarte cómo llegar a la fuente de agua para que lo compruebes por ti mismo.
+// ¡Está justo adelante!
+
+// Mientras continúas tu caminata, el Elfo plantea una segunda pregunta: en cada juego que jugaste, ¿cuál es la menor
+// cantidad de cubos de cada color que podría haber estado en la bolsa para que el juego fuera posible?
+
+// Nuevamente, considera los juegos de ejemplo de antes:
+
+// Juego 1: 3 azules, 4 rojos; 1 rojo, 2 verdes, 6 azules; 2 verdes
+// Juego 2: 1 azul, 2 verdes; 3 verdes, 4 azules, 1 rojo; 1 verde, 1 azul
+// Juego 3: 8 verdes, 6 azules, 20 rojos; 5 azules, 4 rojos, 13 verdes; 5 verdes, 1 rojo
+// Juego 4: 1 verde, 3 rojos, 6 azules; 3 verdes, 6 rojos; 3 verdes, 15 azules, 14 rojos
+// Juego 5: 6 rojos, 1 azul, 3 verdes; 2 azules, 1 rojo, 2 verdes
+// En el juego 1, el juego podría haberse jugado con un mínimo de 4 rojos, 2 verdes y 6 azules. Si cualquier color
+// tuviera incluso un cubo menos, el juego habría sido imposible.
+// El juego 2 podría haberse jugado con un mínimo de 1 rojo, 3 verdes y 4 azules.
+// El juego 3 debe haberse jugado con al menos 20 rojos, 13 verdes y 6 azules.
+// El juego 4 requería al menos 14 rojos, 3 verdes y 15 azules.
+// El juego 5 no necesitaba menos de 6 rojos, 3 verdes y 2 azules en la bolsa.
+// La potencia de un conjunto de cubos es igual al número de cubos rojos, verdes y azules multiplicados entre sí.
+// La potencia del conjunto mínimo de cubos en el juego 1 es 48. En los juegos 2-5 fue de 12, 1560, 630 y 36,
+// respectivamente. Sumando estas cinco potencias se obtiene la suma 2286.
+
+// Para cada juego, encuentra el conjunto mínimo de cubos que debió haber estado presente. ¿Cuál es la suma de las
+// potencias de estos conjuntos?
 
 fun main() {
     // Llama a las funciones parte1 y parte2 con la entrada del día 2 e imprime los resultados.
