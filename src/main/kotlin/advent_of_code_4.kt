@@ -77,7 +77,8 @@ fun calcularPuntosTotales(cartas: List<String>): Int {
     // Iterar sobre cada carta
     for (carta in cartas) {
         // Dividir la carta en números ganadores y números que tienes
-        val partes = carta.split(" | ")
+        println("Carta actual: $carta")
+        val partes = carta.trim().split(" | ")
         if (partes.size == 2) {
             val numerosGanadores = partes[0].split(" ").map { it.toInt() }
             val misNumeros = partes[1].split(" ").map { it.toInt() }
