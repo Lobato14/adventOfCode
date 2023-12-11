@@ -53,9 +53,7 @@ fun main() {
         totalLineas.add(sumaAcumulativa)
     }
 
-    val sumaDeLista = totalLineas
-
-    println("Suma total de la lista: $sumaDeLista")
+    println("Suma total de la lista: $sumaAcumulativa")
 }
 
 fun calcularSumaCadenaNumeros(esquemaMotor: String): Int {

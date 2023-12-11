@@ -16,7 +16,7 @@
 // comprobar por qué dejamos de recibir más arena! Pronto saldrá un ferry que se dirige en esa
 // dirección; es mucho más rápido que su barco. ¿Podría por favor ir? ¿Échale un vistazo?"
 
-//Apenas tienes tiempo para aceptar esta solicitud cuando él menciona otra. "Mientras esperas el ferry
+// Apenas tienes tiempo para aceptar esta solicitud cuando él menciona otra. "Mientras esperas el ferry
 // ,tal vez puedas ayudarnos con nuestro problema de producción de alimentos. El último Almanaque de
 // Island Island acaba de llegar y estamos teniendo problemas para entenderlo".
 
@@ -129,3 +129,7 @@
 
 // ¿Cuál es el número de ubicación más bajo que corresponde a cualquiera de los números de semilla
 // iniciales?
+
+fun main(){
+
+}
