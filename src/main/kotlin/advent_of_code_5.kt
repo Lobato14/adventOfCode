@@ -206,3 +206,32 @@ fun List<List<Long>>.obtenerValorMapeado(x: Long): Long {
     // Si no se encuentra en ningún rango, devolver x
     return x
 }
+
+// --- Parte Dos ---
+
+// Todos pasarán hambre si solo siembras una cantidad tan pequeña de semillas. Releyendo el ç
+// almanaque, parece que la línea de semillas (seeds:) describe realmente rangos de números
+// de semillas.
+
+// Los valores en la línea inicial de semillas (seeds:) vienen en pares. Dentro de cada par,
+// el primer valor es el inicio del rango y el segundo valor es la longitud del rango.
+// Entonces, en la primera línea del ejemplo anterior:
+
+// seeds: 79 14 55 13
+
+// Esta línea describe dos rangos de números de semillas para plantar en el jardín.
+// El primer rango comienza con el número de semilla 79 y contiene 14 valores: 79, 80, ...,
+// 91, 92. El segundo rango comienza con el número de semilla 55 y contiene 13 valores: 55,
+// 56, ..., 66, 67.
+
+// Ahora, en lugar de considerar cuatro números de semillas, necesitas considerar un total
+// de 27 números de semillas.
+
+//En el ejemplo anterior, el número de ubicación más bajo se puede obtener a partir del
+// número de semilla 82, que corresponde a suelo 84, fertilizante 84, agua 84, luz 77,
+// temperatura 45, humedad 46 y ubicación 46. Por lo tanto, el número de ubicación más
+// bajo es 46.
+
+// Considera todos los números de semillas iniciales enumerados en los rangos en la primera
+// línea del almanaque. ¿Cuál es el número de ubicación más bajo que corresponde a alguno de
+// los números de semillas iniciales?
