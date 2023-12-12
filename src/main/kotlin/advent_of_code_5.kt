@@ -131,101 +131,80 @@
 // iniciales?
 
 fun main() {
-    val listaSemillas = listOf(79, 14, 55, 13)
-
-    val listaSemillaASuelo = listOf(
-        Triple(50, 98, 2),
-        Triple(52, 50, 48)
-    )
-
-    val listaSueloAFertilizante = listOf(
-        Triple(0, 15, 37),
-        Triple(37, 52, 2),
-        Triple(39, 0, 15)
-    )
-
-    val listaFertilizanteAgua = listOf(
-        Triple(49, 53, 8),
-        Triple(0, 11, 42),
-        Triple(42, 0, 7),
-        Triple(57, 7, 4)
-    )
-
-    val listaAguaALuz = listOf(
-        Triple(88, 18, 7),
-        Triple(18, 25, 70)
-    )
-
-    val listaLuzATemperatura = listOf(
-        Triple(45, 77, 23),
-        Triple(81, 45, 19),
-        Triple(68, 64, 13)
-    )
-
-    val listaTemperaturaAHumedad = listOf(
-        Triple(0, 69, 1),
-        Triple(1, 0, 69)
-    )
-
-    val listaHumedadALocalizacion = listOf(
-        Triple(60, 56, 37),
-        Triple(56, 93, 4)
-    )
-
-    val resultado = encontrarLocalizacionMasBaja(
-        listaSemillas,
-        listaSemillaASuelo,
-        listaSueloAFertilizante,
-        listaFertilizanteAgua,
-        listaAguaALuz,
-        listaLuzATemperatura,
-        listaTemperaturaAHumedad,
-        listaHumedadALocalizacion
-    )
-
-    println("Número de localización más bajo: $resultado")
+    val entradaPrueba = readInput("Day05")
+    println(parte1(entradaPrueba))
 }
 
-fun encontrarLocalizacionMasBaja(
-    listaSemillas: List<Int>,
-    listaSemillaASuelo: List<Triple<Int, Int, Int>>,
-    listaSueloAFertilizante: List<Triple<Int, Int, Int>>,
-    listaFertilizanteAAgua: List<Triple<Int, Int, Int>>,
-    listaAguaALuz: List<Triple<Int, Int, Int>>,
-    listaLuzATemperatura: List<Triple<Int, Int, Int>>,
-    listaTemperaturaAHumedad: List<Triple<Int, Int, Int>>,
-    listaHumedadALocalizacion: List<Triple<Int, Int, Int>>
-): Int {
-    var semillasActuales = listaSemillas
+fun parte1(entrada: List<String>): Long {
+    // Extraer las semillas de la primera línea de la entrada
+    val semillas = extraerSemillas(entrada)
 
-    semillasActuales = convertirCategoria(semillasActuales, listaSemillaASuelo)
-    semillasActuales = convertirCategoria(semillasActuales, listaSueloAFertilizante)
-    semillasActuales = convertirCategoria(semillasActuales, listaFertilizanteAAgua)
-    semillasActuales = convertirCategoria(semillasActuales, listaAguaALuz)
-    semillasActuales = convertirCategoria(semillasActuales, listaLuzATemperatura)
-    semillasActuales = convertirCategoria(semillasActuales, listaTemperaturaAHumedad)
-    semillasActuales = convertirCategoria(semillasActuales, listaHumedadALocalizacion)
+    // Obtener los mapeadores para cada categoría
+    val mapeadores = obtenerMapeadores(entrada)
 
-    return semillasActuales.minOrNull() ?: -1
-}
-
-fun convertirCategoria(semillas: List<Int>, listaCategoria: List<Triple<Int, Int, Int>>): List<Int> {
-
-    val resultado = mutableListOf<Int>()
-
-    for (semilla in semillas) {
-        var encontrado = false
-        for ((destInicio, sourceInicio, longitud) in listaCategoria) {
-            if (semilla in sourceInicio until sourceInicio + longitud) {
-                resultado.add(destInicio + (semilla - sourceInicio))
-                encontrado = true
-                break
-            }
-        }
-        if (!encontrado) {
-            resultado.add(semilla)
+    // Encontrar la semilla con la ubicación más baja después de aplicar todos los mapeadores
+    return semillas.minOf { semilla ->
+        mapeadores.fold(semilla) { semillaMapeada, mapeador ->
+            mapeador.obtenerValorMapeado(semillaMapeada)
         }
     }
+}
+fun extraerSemillas(input: List<String>): List<Long> {
+    // Obtener la última parte de la primera línea y convertirla en una lista de Long
+    return input.first().split(':').last().split(' ').mapNotNull {
+        if (it.isEmpty()) null else it.toLong()
+    }
+}
 
-    return resultado
+fun obtenerMapeadores(input: List<String>): List<List<List<Long>>> {
+    // Obtener los índices donde comienzan las secciones de mapeadores en la entrada
+    val i1 = input.indexOf("seed-to-soil map:")
+    val i2 = input.indexOf("soil-to-fertilizer map:")
+    val i3 = input.indexOf("fertilizer-to-water map:")
+    val i4 = input.indexOf("water-to-light map:")
+    val i5 = input.indexOf("light-to-temperature map:")
+    val i6 = input.indexOf("temperature-to-humidity map:")
+    val i7 = input.indexOf("humidity-to-location map:")
+
+    // Obtener los datos de cada sección y formar una lista de mapeadores
+    val mapaSemillaSuelo = input.obtenerListaDatos(i1, i2)
+    val sueloFertilizanteMapa = input.obtenerListaDatos(i2, i3)
+    val fertilizanteAguaMapa = input.obtenerListaDatos(i3, i4)
+    val aguaLuzMapa = input.obtenerListaDatos(i4, i5)
+    val luzATemperaturaMapa = input.obtenerListaDatos(i5, i6)
+    val temperaturaAHumedadMapa = input.obtenerListaDatos(i6, i7)
+    val humedadAUbicacionMapa = input.obtenerListaDatos(i7, input.size)
+
+    // Devolver una lista con los mapeadores para cada categoría
+    return listOf(
+        mapaSemillaSuelo, sueloFertilizanteMapa, fertilizanteAguaMapa,
+        aguaLuzMapa, luzATemperaturaMapa, temperaturaAHumedadMapa, humedadAUbicacionMapa
+    )
+}
+
+fun List<String>.obtenerListaDatos(i1: Int, i2: Int): List<List<Long>> {
+    // Calcular el índice de fin del rango
+    val finRango = if (i2 == this.size) i2 else i2 - 1
+
+    // Obtener los datos de la sección y convertirlos en una lista de listas de Long
+    val datosRango = this.toTypedArray().copyOfRange((i1 + 1), finRango).toList().map { str ->
+        str.split(' ').map { it.toLong() }
+    }
+
+    // Transformar cada lista de datos en una lista de Long con la estructura
+    // [desplazamiento, inicioRango, finRango]
+    return datosRango.map {
+        val inicioRango = it[1]
+        val cantidadDesplazamiento = it[0] - inicioRango
+        val longitudRango = it[2]
+
+        listOf(cantidadDesplazamiento, inicioRango, inicioRango + longitudRango)
+    }
+}
+
+fun List<List<Long>>.obtenerValorMapeado(x: Long): Long {
+    // Buscar el rango que incluye x y devolver x + desplazamiento
+    this.map { if (x in it[1] until it[2]) return x + it[0] }
+    // Si no se encuentra en ningún rango, devolver x
+    return x
 }
