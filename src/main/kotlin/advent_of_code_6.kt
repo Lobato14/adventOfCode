@@ -98,37 +98,56 @@
 // ¿Qué obtienes si multiplicas estos números entre sí?
 
 fun main() {
-    val tiempos = listOf(7, 15, 30)
-    val distancias = listOf(9, 40, 200)
-
-    val formasGanar = calcularFormasGanar(tiempos, distancias)
-    val resultado = formasGanar.reduce { acc, i -> acc * i }
-
-    println("El resultado es: $resultado")
+    val input = readInput("Day06")
+    println("Resultado Parte 1: ${multDistanciaTiempo(input)}")
+    println("Resultado Parte 2: ${formasPosibles(input)}")
 }
 
-fun calcularFormasGanar(tiempos: List<Int>, distancias: List<Int>): List<Int> {
-    val formasGanar = mutableListOf<Int>()
+fun multDistanciaTiempo(listaTiempDist: List<String>): Int {
+    // Definir una expresión regular para buscar espacios en blanco
+    val espacioEnBlanco = Regex("\\s+")
 
-    for (i in tiempos.indices) {
-        val tiempoMaximo = tiempos[i]
-        val distanciaRecord = distancias[i]
+    // Extraer y convertir los tiempos y distancias de la entrada
+    val tiempo = listaTiempDist[0].removePrefix("Time:").trim().split(espacioEnBlanco).map { it.toInt() }
+    val distancia = listaTiempDist[1].removePrefix("Distance:").trim().split(espacioEnBlanco).map { it.toInt() }
 
-        var formas = 0
-        for (tiempoBoton in 0 until tiempoMaximo) {
-            val distanciaRecorrida = calcularDistanciaRecorrida(tiempoBoton)
-            if (distanciaRecorrida > distanciaRecord) {
-                formas++
-            }
+    // Calcula el resultado utilizando foldIndexed
+    return tiempo.foldIndexed(1) { index, resto, temp ->
+        val dist = distancia[index]
+        resto * (1..temp).count { n ->
+            (temp - n) * n > dist
         }
-
-        formasGanar.add(formas)
     }
-
-    return formasGanar
 }
 
-fun calcularDistanciaRecorrida(tiempoBoton: Int): Int {
-    val velocidadInicial = 0
-    return velocidadInicial + tiempoBoton * (tiempoBoton + 1) / 2
+// --- Parte Dos ---
+
+// A medida que la carrera está a punto de comenzar, te das cuenta de que el trozo de papel
+// con los tiempos de la carrera y las distancias registradas que obtuviste antes tiene un
+// espaciado muy malo. En realidad, solo hay una carrera; ignora los espacios entre los
+// números en cada línea.
+
+// Entonces, el ejemplo anterior ahora se interpreta de la siguiente manera:
+
+// Tiempo: 71530
+// Distancia: 940200
+
+// Ahora, debes averiguar cuántas formas hay de ganar esta única carrera. En este ejemplo,
+// la carrera dura 71530 milisegundos y la distancia récord que debes superar es 940200
+// milímetros. Podrías mantener presionado el botón en cualquier momento entre 14 y 71516
+// milisegundos y superar el récord, ¡un total de 71503 formas!
+
+// ¿Cuántas formas puedes superar el récord en esta carrera mucho más larga?
+
+fun formasPosibles(listaFormas: List<String>): Int {
+    // Definir una expresión regular para buscar espacios en blanco
+    val espacioEnBlanco = Regex("\\s+")
+
+    val tiempo = listaFormas[0].removePrefix("Time:").replace(espacioEnBlanco, "").toLong()
+    val distancia = listaFormas[1].removePrefix("Distance:").replace(espacioEnBlanco, "").toLong()
+
+    // Contar las formas posibles de superar el récord en la carrera
+    return (1..tiempo).count { n ->
+        (tiempo - n) * n > distancia
+    }
 }
