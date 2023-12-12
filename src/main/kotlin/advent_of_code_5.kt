@@ -132,14 +132,11 @@
 
 fun main() {
     val entradaPrueba = readInput("Day05")
-    println(parte1(entradaPrueba))
+    println("Resultado: ${parte1(entradaPrueba)}")
 }
-
 fun parte1(entrada: List<String>): Long {
-    // Extraer las semillas de la primera línea de la entrada
-    val semillas = extraerSemillas(entrada)
 
-    // Obtener los mapeadores para cada categoría
+    val semillas = extraerSemillas(entrada)
     val mapeadores = obtenerMapeadores(entrada)
 
     // Encontrar la semilla con la ubicación más baja después de aplicar todos los mapeadores
@@ -149,6 +146,7 @@ fun parte1(entrada: List<String>): Long {
         }
     }
 }
+
 fun extraerSemillas(input: List<String>): List<Long> {
     // Obtener la última parte de la primera línea y convertirla en una lista de Long
     return input.first().split(':').last().split(' ').mapNotNull {
@@ -204,7 +202,7 @@ fun List<String>.obtenerListaDatos(i1: Int, i2: Int): List<List<Long>> {
 
 fun List<List<Long>>.obtenerValorMapeado(x: Long): Long {
     // Buscar el rango que incluye x y devolver x + desplazamiento
-    this.map { if (x in it[1] until it[2]) return x + it[0] }
+    this.map { if (x in it[1]..<it[2]) return x + it[0] }
     // Si no se encuentra en ningún rango, devolver x
     return x
 }
