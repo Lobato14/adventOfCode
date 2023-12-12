@@ -1,6 +1,6 @@
 // --- Día 5: Si a una semilla le das un fertilizante ---
 
-// Parte 1
+// --- Parte 1 ---
 
 // Tomas el barco y encuentras al jardinero justo donde te dijeron que estaría: administrando un
 // "jardín" gigante que te parece más bien una granja.
