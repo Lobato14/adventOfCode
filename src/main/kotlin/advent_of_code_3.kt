@@ -43,50 +43,83 @@
 
 
 fun main() {
-    val lineas = readInput("Day03")
-    val totalLineas = mutableListOf<Int>()
-    var sumaAcumulativa = 0
-
-    for (linea in lineas) {
-        val sumaDeCadenaDeNumeros = calcularSumaCadenaNumeros(linea)
-        sumaAcumulativa += sumaDeCadenaDeNumeros
-        totalLineas.add(sumaAcumulativa)
-    }
-
-    println("Suma total de la lista: $sumaAcumulativa")
+    // Entrada
+    val entrada = readInput("Day03")
+    // Proceso
+    val resultado = resolverParte1(entrada)
+    // Salida
+    println("La sumade todos los números en el esquema del motor es de $resultado")
 }
 
-fun calcularSumaCadenaNumeros(esquemaMotor: String): Int {
-    val lineas = esquemaMotor.lines()
-    var suma = 0
+fun lineasAAnalizar(lineasAdyacentes: MutableList<String>, input: List<String>, index: Int) {
+    val dimensiones = input[index].length
+    lineasAdyacentes.clear()
+    if (index == 0) {
+        lineasAdyacentes.add(".".repeat(dimensiones))
+    } else {
+        lineasAdyacentes.add(input[index - 1])
+    }
+    lineasAdyacentes.add(input[index])
+    if (index == dimensiones - 1) {
+        lineasAdyacentes.add(".".repeat(dimensiones))
+    } else {
+        lineasAdyacentes.add(input[index + 1])
+    }
+}
 
-    for (i in 0 until lineas.size) {
-        for (j in 0 until lineas[i].length) {
-            val simbolo = lineas[i][j]
+fun esSimbolo(c: Char): Boolean {
+    return !c.isDigit() && c != '.'
+}
 
-            if (simbolo.isDigit()) {
-                if (esNumeroDeParte(lineas, i, j)) {
-                    suma += Character.getNumericValue(simbolo)
+fun tieneSimboloAdyacente(lineasAdyacentes: MutableList<String>, index: Int): Boolean {
+    val dimension = lineasAdyacentes[0].length
+
+    for (fila in 0..2) {
+        for (desplazamientoCaracter in -1..1) {
+            val indice = index + desplazamientoCaracter
+            if (indice in 0 until dimension) {
+                if (esSimbolo(lineasAdyacentes[fila][indice])) {
+                    return true
                 }
-            }
-        }
-    }
-
-    return suma
-}
-
-fun esNumeroDeParte(lineas: List<String>, i: Int, j: Int): Boolean {
-    for (x in -1..1) {
-        for (y in -1..1) {
-            val fila = i + x
-            val columna = j + y
-
-            if (fila in 0 until lineas.size && columna in 0 until lineas[fila].length &&
-                (lineas[fila][columna] == '*' || lineas[fila][columna].isDigit())
-            ) {
-                return true
             }
         }
     }
     return false
 }
+
+fun sumaPartNumbersDeLinea(lineasDeAnalisis: MutableList<String>): Int {
+    val lineaActual = 1
+    var numero = ""
+    var tieneSimboloAdyacente = false
+    var sumaPartNumbers = 0
+
+    lineasDeAnalisis[lineaActual].forEachIndexed { indice, caracter ->
+        if (caracter.isDigit()) {
+            if (!tieneSimboloAdyacente) {
+                tieneSimboloAdyacente = tieneSimboloAdyacente(lineasDeAnalisis, indice)
+            }
+            numero += caracter
+        }
+        if ((!caracter.isDigit() || indice == lineasDeAnalisis[lineaActual].length - 1) && numero.isNotBlank()) {
+            if (tieneSimboloAdyacente) {
+                sumaPartNumbers += numero.toInt()
+                tieneSimboloAdyacente = false
+            }
+            numero = ""
+        }
+    }
+    return sumaPartNumbers
+}
+
+fun resolverParte1(input: List<String>): Int {
+    var parteNumerica = 0
+    val lineasEnEstudio: MutableList<String> = mutableListOf()
+
+    input.forEachIndexed { index, _ ->
+        lineasAAnalizar(lineasEnEstudio, input, index)
+        parteNumerica += sumaPartNumbersDeLinea(lineasEnEstudio)
+    }
+
+    return parteNumerica
+}
+
