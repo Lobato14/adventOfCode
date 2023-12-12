@@ -131,83 +131,91 @@
 // iniciales?
 
 fun main() {
-    val semillas = listOf(79, 14, 55, 13)
+    val listaSemillas = listOf(79, 14, 55, 13)
 
-    val mapaSemillaASuelo = listOf(
+    val listaSemillaASuelo = listOf(
         Triple(50, 98, 2),
         Triple(52, 50, 48)
     )
 
-    val mapaSueloAFertilizante = listOf(
+    val listaSueloAFertilizante = listOf(
         Triple(0, 15, 37),
         Triple(37, 52, 2),
         Triple(39, 0, 15)
     )
 
-    val mapaFertilizanteAAgua = listOf(
+    val listaFertilizanteAgua = listOf(
         Triple(49, 53, 8),
         Triple(0, 11, 42),
         Triple(42, 0, 7),
         Triple(57, 7, 4)
     )
 
-    val mapaAguaALuz = listOf(
+    val listaAguaALuz = listOf(
         Triple(88, 18, 7),
         Triple(18, 25, 70)
     )
 
-    val mapaLuzATemperatura = listOf(
+    val listaLuzATemperatura = listOf(
         Triple(45, 77, 23),
         Triple(81, 45, 19),
         Triple(68, 64, 13)
     )
 
-    val mapaTemperaturaAHumedad = listOf(
+    val listaTemperaturaAHumedad = listOf(
         Triple(0, 69, 1),
         Triple(1, 0, 69)
     )
 
-    val mapaHumedadALocalizacion = listOf(
+    val listaHumedadALocalizacion = listOf(
         Triple(60, 56, 37),
         Triple(56, 93, 4)
     )
 
-    val resultado = encontrarLocalizacionMasBaja(semillas, mapaSemillaASuelo, mapaSueloAFertilizante, mapaFertilizanteAAgua,
-        mapaAguaALuz, mapaLuzATemperatura, mapaTemperaturaAHumedad, mapaHumedadALocalizacion)
+    val resultado = encontrarLocalizacionMasBaja(
+        listaSemillas,
+        listaSemillaASuelo,
+        listaSueloAFertilizante,
+        listaFertilizanteAgua,
+        listaAguaALuz,
+        listaLuzATemperatura,
+        listaTemperaturaAHumedad,
+        listaHumedadALocalizacion
+    )
 
     println("Número de localización más bajo: $resultado")
 }
 
 fun encontrarLocalizacionMasBaja(
-    semillas: List<Int>,
-    mapaSemillaASuelo: List<Triple<Int, Int, Int>>,
-    mapaSueloAFertilizante: List<Triple<Int, Int, Int>>,
-    mapaFertilizanteAAgua: List<Triple<Int, Int, Int>>,
-    mapaAguaALuz: List<Triple<Int, Int, Int>>,
-    mapaLuzATemperatura: List<Triple<Int, Int, Int>>,
-    mapaTemperaturaAHumedad: List<Triple<Int, Int, Int>>,
-    mapaHumedadALocalizacion: List<Triple<Int, Int, Int>>
+    listaSemillas: List<Int>,
+    listaSemillaASuelo: List<Triple<Int, Int, Int>>,
+    listaSueloAFertilizante: List<Triple<Int, Int, Int>>,
+    listaFertilizanteAAgua: List<Triple<Int, Int, Int>>,
+    listaAguaALuz: List<Triple<Int, Int, Int>>,
+    listaLuzATemperatura: List<Triple<Int, Int, Int>>,
+    listaTemperaturaAHumedad: List<Triple<Int, Int, Int>>,
+    listaHumedadALocalizacion: List<Triple<Int, Int, Int>>
 ): Int {
-    var semillasActuales = semillas
+    var semillasActuales = listaSemillas
 
-    semillasActuales = convertirCategoria(semillasActuales, mapaSemillaASuelo)
-    semillasActuales = convertirCategoria(semillasActuales, mapaSueloAFertilizante)
-    semillasActuales = convertirCategoria(semillasActuales, mapaFertilizanteAAgua)
-    semillasActuales = convertirCategoria(semillasActuales, mapaAguaALuz)
-    semillasActuales = convertirCategoria(semillasActuales, mapaLuzATemperatura)
-    semillasActuales = convertirCategoria(semillasActuales, mapaTemperaturaAHumedad)
-    semillasActuales = convertirCategoria(semillasActuales, mapaHumedadALocalizacion)
+    semillasActuales = convertirCategoria(semillasActuales, listaSemillaASuelo)
+    semillasActuales = convertirCategoria(semillasActuales, listaSueloAFertilizante)
+    semillasActuales = convertirCategoria(semillasActuales, listaFertilizanteAAgua)
+    semillasActuales = convertirCategoria(semillasActuales, listaAguaALuz)
+    semillasActuales = convertirCategoria(semillasActuales, listaLuzATemperatura)
+    semillasActuales = convertirCategoria(semillasActuales, listaTemperaturaAHumedad)
+    semillasActuales = convertirCategoria(semillasActuales, listaHumedadALocalizacion)
 
     return semillasActuales.minOrNull() ?: -1
 }
 
-fun convertirCategoria(semillas: List<Int>, mapaCategoria: List<Triple<Int, Int, Int>>): List<Int> {
+fun convertirCategoria(semillas: List<Int>, listaCategoria: List<Triple<Int, Int, Int>>): List<Int> {
 
     val resultado = mutableListOf<Int>()
 
     for (semilla in semillas) {
         var encontrado = false
-        for ((destInicio, sourceInicio, longitud) in mapaCategoria) {
+        for ((destInicio, sourceInicio, longitud) in listaCategoria) {
             if (semilla in sourceInicio until sourceInicio + longitud) {
                 resultado.add(destInicio + (semilla - sourceInicio))
                 encontrado = true
