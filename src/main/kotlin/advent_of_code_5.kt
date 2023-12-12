@@ -132,14 +132,14 @@
 
 fun main() {
     val entradaPrueba = readInput("Day05")
-    println("Resultado: ${parte1(entradaPrueba)}")
+    println("Resultado Parte 1: ${parte1(entradaPrueba)}")
+    println("Resultado Parte 2: ${parte2(entradaPrueba)}")
 }
-fun parte1(entrada: List<String>): Long {
 
+fun parte1(entrada: List<String>): Long {
     val semillas = extraerSemillas(entrada)
     val mapeadores = obtenerMapeadores(entrada)
 
-    // Encontrar la semilla con la ubicación más baja después de aplicar todos los mapeadores
     return semillas.minOf { semilla ->
         mapeadores.fold(semilla) { semillaMapeada, mapeador ->
             mapeador.obtenerValorMapeado(semillaMapeada)
@@ -202,36 +202,27 @@ fun List<String>.obtenerListaDatos(i1: Int, i2: Int): List<List<Long>> {
 
 fun List<List<Long>>.obtenerValorMapeado(x: Long): Long {
     // Buscar el rango que incluye x y devolver x + desplazamiento
-    this.map { if (x in it[1]..<it[2]) return x + it[0] }
+    this.map { if (x in it[1] until it[2]) return x + it[0] }
     // Si no se encuentra en ningún rango, devolver x
     return x
 }
 
 // --- Parte Dos ---
 
-// Todos pasarán hambre si solo siembras una cantidad tan pequeña de semillas. Releyendo el ç
-// almanaque, parece que la línea de semillas (seeds:) describe realmente rangos de números
-// de semillas.
+fun parte2(input: List<String>): Long {
+    val mapeadores = obtenerMapeadores(input)
+    val oldSeedValues = extraerSemillas(input)
 
-// Los valores en la línea inicial de semillas (seeds:) vienen en pares. Dentro de cada par,
-// el primer valor es el inicio del rango y el segundo valor es la longitud del rango.
-// Entonces, en la primera línea del ejemplo anterior:
+    return oldSeedValues.chunked(2)
+        .flatMap { (startValue, seedsRange) ->
+            (startValue until startValue + seedsRange).map { seed ->
+                foldSeedWithMapping(mapeadores, seed)
+            }
+        }
+        .minOrNull() ?: -1
+}
 
-// seeds: 79 14 55 13
-
-// Esta línea describe dos rangos de números de semillas para plantar en el jardín.
-// El primer rango comienza con el número de semilla 79 y contiene 14 valores: 79, 80, ...,
-// 91, 92. El segundo rango comienza con el número de semilla 55 y contiene 13 valores: 55,
-// 56, ..., 66, 67.
-
-// Ahora, en lugar de considerar cuatro números de semillas, necesitas considerar un total
-// de 27 números de semillas.
-
-//En el ejemplo anterior, el número de ubicación más bajo se puede obtener a partir del
-// número de semilla 82, que corresponde a suelo 84, fertilizante 84, agua 84, luz 77,
-// temperatura 45, humedad 46 y ubicación 46. Por lo tanto, el número de ubicación más
-// bajo es 46.
-
-// Considera todos los números de semillas iniciales enumerados en los rangos en la primera
-// línea del almanaque. ¿Cuál es el número de ubicación más bajo que corresponde a alguno de
-// los números de semillas iniciales?
+fun foldSeedWithMapping(mapeadores: List<List<List<Long>>>, semilla: Long): Long =
+    mapeadores.fold(semilla) { semillaMapeada, mapeador ->
+        mapeador.obtenerValorMapeado(semillaMapeada)
+    }
