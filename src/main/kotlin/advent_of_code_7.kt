@@ -167,37 +167,37 @@ fun main() {
 // Usando la nueva regla de los comodines, encuentra el rango de cada mano en tu conjunto.
 // ¿Cuáles son las nuevas ganancias totales?
 
-    val handsWithJ = input
-        .map { h -> h.split(" ")}
-        .map { pair ->
-            val grupoDeManos = pair[0].toListChars()
-            val nuevaMano = if (grupoDeManos[0].first == 'J' && grupoDeManos[0].second == 5) pair[0].replace('J', 'A')
-            else if (grupoDeManos[0].first == 'J') pair[0].replace('J', grupoDeManos[1].first)
-            else pair[0].replace('J', grupoDeManos[0].first)
+    val manosConJ = input
+        .map { mano -> mano.split(" ")}
+        .map { par ->
+            val grupoDeManos = par[0].toListChars()
+            val nuevaMano = if (grupoDeManos[0].first == 'J' && grupoDeManos[0].second == 5) par[0].replace('J', 'A')
+            else if (grupoDeManos[0].first == 'J') par[0].replace('J', grupoDeManos[1].first)
+            else par[0].replace('J', grupoDeManos[0].first)
 
-            Triple(pair[0],
+            Triple(par[0],
                 nuevaMano.toListChars(),
-                pair[1].toInt())
+                par[1].toInt())
         }
 
-    val compareHands2 = Comparator<Triple<String, List<Pair<Char, Int>>, Int>> { t1, t2 ->
-        var c = 0
+    val compararManos2 = Comparator<Triple<String, List<Pair<Char, Int>>, Int>> { t1, t2 ->
+        var contador = 0
         for (i in 0..4) {
             val i1 = ordenDeCartas2.indexOf(t1.first[i])
             val i2 = ordenDeCartas2.indexOf(t2.first[i])
-            c = i2.compareTo(i1)
-            if (c != 0) break
+            contador = i2.compareTo(i1)
+            if (contador != 0) break
         }
-        c
+        contador
     }
 
-    val highCardSorted2 = handsWithJ.filter { it.second[0].second == 1 && it.second[1].second == 1 }.sortedWith(compareHands2)
-    val onePairSorted2 = handsWithJ.filter { it.second[0].second == 2 && it.second[1].second == 1 }.sortedWith(compareHands2)
-    val twoPairSorted2 = handsWithJ.filter { it.second[0].second == 2 && it.second[1].second == 2 }.sortedWith(compareHands2)
-    val threeOfAKindSorted2 = handsWithJ.filter { it.second[0].second == 3 && it.second[1].second == 1 }.sortedWith(compareHands2)
-    val fullHouseSorted2 = handsWithJ.filter { it.second[0].second == 3 && it.second[1].second == 2 }.sortedWith(compareHands2)
-    val fourOfAKindSorted2 = handsWithJ.filter { it.second[0].second == 4 }.sortedWith(compareHands2)
-    val fiveOfAKindSorted2 = handsWithJ.filter { it.second[0].second == 5 }.sortedWith(compareHands2)
+    val highCardSorted2 = manosConJ.filter { it.second[0].second == 1 && it.second[1].second == 1 }.sortedWith(compararManos2)
+    val onePairSorted2 = manosConJ.filter { it.second[0].second == 2 && it.second[1].second == 1 }.sortedWith(compararManos2)
+    val twoPairSorted2 = manosConJ.filter { it.second[0].second == 2 && it.second[1].second == 2 }.sortedWith(compararManos2)
+    val threeOfAKindSorted2 = manosConJ.filter { it.second[0].second == 3 && it.second[1].second == 1 }.sortedWith(compararManos2)
+    val fullHouseSorted2 = manosConJ.filter { it.second[0].second == 3 && it.second[1].second == 2 }.sortedWith(compararManos2)
+    val fourOfAKindSorted2 = manosConJ.filter { it.second[0].second == 4 }.sortedWith(compararManos2)
+    val fiveOfAKindSorted2 = manosConJ.filter { it.second[0].second == 5 }.sortedWith(compararManos2)
 
     val ordenarMAnos2 = highCardSorted2 + onePairSorted2 + twoPairSorted2 + threeOfAKindSorted2 + fullHouseSorted2 +
             fourOfAKindSorted2 + fiveOfAKindSorted2
