@@ -2,6 +2,8 @@
 
 // --- Día 3: Relaciones de Engranajes ---
 
+// -- PARTE 1 ---
+
 // Tú y el Elfo finalmente llegan a una estación de teleférico; él dice que el teleférico los llevará hasta la
 // fuente de agua, pero este es el límite hasta donde puede acompañarte. Entráis.
 
