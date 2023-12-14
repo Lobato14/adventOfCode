@@ -95,33 +95,25 @@
 
 fun main() {
 
-    val marcadorUno = 'A'
-    val marcadorDos = 'B'
-
-    val primeraSecuencia = mutableListOf(0, 3, 6, 9, 12, 15, marcadorUno)
-    val segundaSecuencia = mutableListOf(1, 3, 6, 10, 15, 21, marcadorDos)
-    val terceraSecuencia = mutableListOf(10, 13, 16, 21, 30, 45, 68)
-
-    val listaSecuenciaCompleta = mutableListOf(primeraSecuencia, segundaSecuencia, terceraSecuencia)
-
-    for (lista in listaSecuenciaCompleta) {
-        val resultado = calcularSiguienteValor(lista)
-        println(resultado)
+    val secuencias = readInput("Day09").map {
+        it.split(" ").map(String::toInt)
     }
+
+    val sumaParte1 = calcularSumaParte1(secuencias)
+
+
+    println("La suma de los valores extrapolados en la Parte 1 es: $sumaParte1")
 }
 
-fun calcularSiguienteValor(secuencia: MutableList<out Any>): Any {
-    // Calcular la secuencia de diferencias
-    val diferencias = mutableListOf<Int>()
-    for (numero in 0..<secuencia.size - 1) {
-        diferencias.add((secuencia[numero + 1] as Int) - (secuencia[numero] as Int))
+fun List<Int>.siguienteValor(): Long {
+    return if (distinct().count() == 1) {
+        first().toLong()
+    } else {
+        this.last() + this.mapIndexedNotNull { i: Int, num: Int ->
+            this.getOrNull(i + 1)?.minus(num)
+        }?.siguienteValor()!! ?: 0
     }
-
-    diferencias.add(0)
-
-    for (i in secuencia.indices) {
-        secuencia[i] = (secuencia[i] as Int) + diferencias[i]
-    }
-
-    return secuencia.last()
+}
+fun calcularSumaParte1(secuencias: List<List<Int>>): Long {
+    return secuencias.sumOf { it.siguienteValor() }
 }
