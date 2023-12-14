@@ -100,20 +100,62 @@ fun main() {
     }
 
     val sumaParte1 = calcularSumaParte1(secuencias)
-
+    val sumaParte2 = calcularSumaParte2(secuencias)
 
     println("La suma de los valores extrapolados en la Parte 1 es: $sumaParte1")
+    println("La suma de los valores extrapolados en la Parte 2 es: $sumaParte2")
 }
 
 fun List<Int>.siguienteValor(): Long {
     return if (distinct().count() == 1) {
         first().toLong()
     } else {
-        this.last() + this.mapIndexedNotNull { i: Int, num: Int ->
+        (this.last() + this.mapIndexedNotNull { i: Int, num: Int ->
             this.getOrNull(i + 1)?.minus(num)
-        }?.siguienteValor()!! ?: 0
+        }.siguienteValor())
     }
 }
 fun calcularSumaParte1(secuencias: List<List<Int>>): Long {
     return secuencias.sumOf { it.siguienteValor() }
+}
+
+// --- Parte Dos ---
+
+// Por supuesto, sería bueno incluir aún más historia en tu informe. Seguramente es seguro simplemente
+// extrapolar hacia atrás también, ¿verdad?
+
+// Para cada historia, repite el proceso de encontrar diferencias hasta que la secuencia de
+// diferencias sea completamente cero. Luego, en lugar de agregar un cero al final y completar
+// los valores siguientes de cada secuencia anterior, debes agregar un cero al principio de tu
+// secuencia de ceros, luego llenar nuevos valores iniciales para cada secuencia anterior.
+
+// En particular, esto es cómo se ve la tercera historia al extrapolar hacia atrás en el tiempo:
+
+// 5 10 13 16 21 30 45
+// 5 3 3 5 9 15
+// -2 0 2 4 6
+// 2 2 2 2
+// 0 0 0
+
+// Agregando los nuevos valores en el lado izquierdo de cada secuencia de abajo hacia arriba revela
+// eventualmente el nuevo valor más a la izquierda de la historia: 5.
+
+// Haciendo esto para los datos de ejemplo restantes, se obtienen valores anteriores de -3 para la
+// primera historia y 0 para la segunda historia. Sumando todos estos nuevos valores se obtiene 2.
+
+// Analiza tu informe de OASIS nuevamente, esta vez extrapolando el valor anterior para cada
+// historia. ¿Cuál es la suma de estos valores extrapolados?
+
+fun List<Int>.valorAnterior(): Long {
+    return if (distinct().count() == 1) {
+        first().toLong()
+    } else {
+        (this.first() - this.mapIndexedNotNull { i: Int, num: Int ->
+            this.getOrNull(i + 1)?.minus(num)
+        }.valorAnterior())
+    }
+}
+
+fun calcularSumaParte2(secuencias: List<List<Int>>): Long {
+ return secuencias.sumOf { it.valorAnterior() }
 }
