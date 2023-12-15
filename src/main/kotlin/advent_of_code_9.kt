@@ -157,5 +157,5 @@ fun List<Int>.valorAnterior(): Long {
 }
 
 fun calcularSumaParte2(secuencias: List<List<Int>>): Long {
- return secuencias.sumOf { it.valorAnterior() }
+    return secuencias.sumOf { it.valorAnterior() }
 }
