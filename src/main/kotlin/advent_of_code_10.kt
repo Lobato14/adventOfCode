@@ -128,6 +128,87 @@
 // Encuentra el único bucle gigante que comienza en S. ¿Cuántos pasos a lo largo del bucle se necesitan
 // para llegar desde la posición inicial hasta el punto más alejado de la posición inicial?
 
-fun main(){
+fun main() {
+    // Entrada
+    val inputParte1 = readInput("Day10")
+    // Proceso
+    val resultado = calcularNumeroDePasos(inputParte1)
+    // Salida
+    println("Numero de pasos: $resultado")
+}
 
+// Función para encontrar la siguiente posición del conector en el laberinto
+fun encontrarSiguienteConector(boceto: List<String>, posActual: Pair<Int, Int>,
+                               posAnterior: Pair<Int, Int>): Pair<Int, Int> {
+    val (x, y) = posActual
+
+    val mapaDirecciones = mapOf(
+        "IZQUIERDA" to setOf('-', 'F', 'L', 'S'),
+        "DERECHA" to setOf('-', '7', 'J', 'S'),
+        "ARRIBA" to setOf('|', '7', 'F', 'S'),
+        "ABAJO" to setOf('|', 'L', 'J', 'S')
+    )
+
+    val mapaConectores = mapOf(
+        '|' to setOf("ARRIBA", "ABAJO"),
+        '-' to setOf("IZQUIERDA", "DERECHA"),
+        'L' to setOf("ARRIBA", "DERECHA"),
+        'J' to setOf("ARRIBA", "IZQUIERDA"),
+        '7' to setOf("ABAJO", "IZQUIERDA"),
+        'F' to setOf("ABAJO", "DERECHA"),
+        'S' to setOf("ARRIBA", "ABAJO", "IZQUIERDA", "DERECHA")
+    )
+
+    // Obtener direcciones
+    val direcciones = mapaConectores[boceto[x][y]] ?: emptySet()
+
+    // Filtrar las direcciones válidas en función de la posición actual
+    val direccionesValidas = direcciones.filter { direccion ->
+        val (nuevoX, nuevoY) = when (direccion) {
+            "ARRIBA" -> x - 1 to y
+            "ABAJO" -> x + 1 to y
+            "IZQUIERDA" -> x to y - 1
+            "DERECHA" -> x to y + 1
+            else -> x to y
+        }
+        // Verificar que la nueva posición esté dentro del laberinto
+        // y que el nuevo conector esté permitido en esa dirección
+        nuevoX in boceto.indices && nuevoY in boceto[nuevoX].indices &&
+                boceto[nuevoX][nuevoY] in (mapaDirecciones[direccion] ?: emptySet())
+    }
+
+    // Devolver la primera posición válida que no sea la anterior
+    return direccionesValidas.map { direccion ->
+        val (nuevoX, nuevoY) = when (direccion) {
+            "ARRIBA" -> x - 1 to y
+            "ABAJO" -> x + 1 to y
+            "IZQUIERDA" -> x to y - 1
+            "DERECHA" -> x to y + 1
+            else -> x to y
+        }
+        nuevoX to nuevoY
+    }.find { it != posAnterior }!!
+}
+
+// Función para calcular el número de pasos necesarios para recorrer el laberinto
+fun calcularNumeroDePasos(boceto: List<String>): Int {
+
+    val filaInicio = boceto.indexOfFirst { 'S' in it }
+    val columnaInicio = boceto[filaInicio].indexOf('S')
+    val inicio = filaInicio to columnaInicio
+
+    var longitudCiclo = 2
+    var posicionAnterior = inicio
+    var posicionActual = encontrarSiguienteConector(boceto, inicio, inicio)
+
+    while (posicionActual != inicio) {
+        // Actualiza su posicion
+        val posicionTemp = posicionActual
+        posicionActual = encontrarSiguienteConector(boceto, posicionActual, posicionAnterior)
+        posicionAnterior = posicionTemp
+        longitudCiclo++
+    }
+
+    // Calcular la longitud del ciclo y devolver la mitad (redondeando hacia abajo)
+    return if (longitudCiclo % 2 == 0) longitudCiclo / 2 else (longitudCiclo - 1) / 2
 }
