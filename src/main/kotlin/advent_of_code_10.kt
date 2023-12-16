@@ -133,7 +133,7 @@ fun main() {
     val input = readInput("Day10")
     // Proceso
     val resultado = calcularNumeroDePasos(input)
-    val resultado2 = calcularAreaDentroDelBucle(input)
+    // val resultado2 = calcularAreaDentroDelBucle(input)
     // Salida
     println("Numero de pasos: $resultado")
     println("Casillas encerradas en el bucle: $resultado2")
