@@ -136,7 +136,7 @@ fun main() {
     // val resultado2 = calcularAreaDentroDelBucle(input)
     // Salida
     println("Numero de pasos: $resultado")
-    println("Casillas encerradas en el bucle: $resultado2")
+    // println("Casillas encerradas en el bucle: $resultado2")
 }
 
 // Función para encontrar la siguiente posición del conector en el laberinto
