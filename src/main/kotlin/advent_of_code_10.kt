@@ -130,11 +130,13 @@
 
 fun main() {
     // Entrada
-    val inputParte1 = readInput("Day10")
+    val input = readInput("Day10")
     // Proceso
-    val resultado = calcularNumeroDePasos(inputParte1)
+    val resultado = calcularNumeroDePasos(input)
+    val resultado2 = calcularAreaDentroDelBucle(input)
     // Salida
     println("Numero de pasos: $resultado")
+    println("Casillas encerradas en el bucle: $resultado2")
 }
 
 // Función para encontrar la siguiente posición del conector en el laberinto
@@ -212,3 +214,113 @@ fun calcularNumeroDePasos(boceto: List<String>): Int {
     // Calcular la longitud del ciclo y devolver la mitad (redondeando hacia abajo)
     return if (longitudCiclo % 2 == 0) longitudCiclo / 2 else (longitudCiclo - 1) / 2
 }
+
+// --- Parte 2----
+
+// Rápidamente llegas al punto más lejano del bucle, pero el animal nunca emerge. ¿Quizás su nido está dentro
+// del área rodeada por el bucle?
+
+// Para determinar si vale la pena tomar el tiempo para buscar dicho nido, debes calcular cuántas casillas están
+// contenidas dentro del bucle. Por ejemplo:
+
+// ...........
+// .S-------7.
+// .|F-----7|.
+// .||.....||.
+// .||.....||.
+// .|L-7.F-J|.
+// .|..|.|..|.
+// .L--J.L--J.
+// ...........
+
+// El bucle anterior encierra solo cuatro casillas: los dos pares de puntos en el suroeste y sureste (marcados
+// como I abajo). Las casillas centrales (marcadas como O abajo) no están en el bucle. Aquí está el mismo bucle
+// nuevamente con esas regiones marcadas:
+
+// ...........
+// .S-------7.
+// .|F-----7|.
+// .||OOOOO||.
+// .||OOOOO||.
+// .|L-7OF-J|.
+// .|II|O|II|.
+// .L--JOL--J.
+// .....O.....
+
+// De hecho, ni siquiera es necesario que haya un camino completo de baldosas hacia afuera para que las baldosas
+// cuenten como fuera del bucle; ¡se permite apretarse entre tuberías! Aquí, I todavía está dentro del bucle y O
+// todavía está fuera del bucle:
+
+// ..........
+// .S------7.
+// .|F----7|.
+// .||OOOO||.
+// .||OOOO||.
+// .|L-7F-J|.
+// .|II||II|.
+// .L--JL--J.
+// ..........
+
+// En ambos ejemplos anteriores, 4 casillas están encerradas por el bucle.
+
+// Aquí tienes un ejemplo más grande:
+
+// .F----7F7F7F7F-7....
+// .|F--7||||||||FJ....
+// .||.FJ||||||||L7....
+// FJL7L7LJLJ||LJ.L-7..
+// L--J.L7...LJS7F-7L7.
+// ....F-J..F7FJ|L7L7L7
+// ....L7.F7||L7|.L7L7|
+// .....|FJLJ|FJ|F7|.LJ
+// ....FJL-7.||.||||...
+// ....L---J.LJ.LJLJ...
+
+// El boceto anterior tiene muchas piezas aleatorias de suelo, algunas de las cuales están en el bucle (I)
+// y otras que están fuera de él (O):
+
+// OF----7F7F7F7F-7OOOO
+// O|F--7||||||||FJOOOO
+// O||OFJ||||||||L7OOOO
+// FJL7L7LJLJ||LJIL-7OO
+// L--JOL7IIILJS7F-7L7O
+// OOOOF-JIIF7FJ|L7L7L7
+// OOOOL7IF7||L7|IL7L7|
+// OOOOO|FJLJ|FJ|F7|OLJ
+// OOOOFJL-7O||O||||OOO
+// OOOOL---JOLJOLJLJOOO
+
+// En este ejemplo más grande, 8 casillas están encerradas por el bucle.
+
+// Cualquier casilla que no forme parte del bucle principal puede contar como si estuviera encerrada por el bucle.
+// Aquí hay otro ejemplo con muchas piezas de tubería basura que no están conectadas al bucle principal en
+// absoluto:
+
+// FF7FSF7F7F7F7F7F---7
+// L|LJ||||||||||||F--J
+// FL-7LJLJ||||||LJL-77
+// F--JF--7||LJLJ7F7FJ-
+// L---JF-JLJ.||-FJLJJ7
+// |F|F-JF---7F7-L7L|7|
+// |FFJF7L7F-JF7|JL---7
+// 7-L-JL7||F7|L7F-7F7|
+// L.L7LFJ|||||FJL7||LJ
+// L7JLJL-JLJLJL--JLJ.L
+
+// Aquí solo se marcan las casillas que están encerradas por el bucle con I:
+
+// FF7FSF7F7F7F7F7F---7
+// L|LJ||||||||||||F--J
+// FL-7LJLJ||||||LJL-77
+// F--JF--7||LJLJIF7FJ-
+// L---JF-JLJIIIIFJLJJ7
+// |F|F-JF---7IIIL7L|7|
+// |FFJF7L7F-JF7IIL---7
+// 7-L-JL7||F7|L7F-7F7|
+// L.L7LFJ|||||FJL7||LJ
+// L7JLJL-JLJLJL--JLJ.L
+
+// En este último ejemplo, 10 casillas están encerradas por el bucle.
+
+// Descubre si tienes tiempo para buscar el nido calculando el área dentro del bucle. ¿Cuántas casillas están
+// encerradas por el bucle?
