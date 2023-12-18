@@ -118,36 +118,54 @@
 // Expande el universo y luego halla la longitud del camino más corto entre cada par de
 // galaxias. ¿Cuál es la suma de estas longitudes?
 
-fun main(){
-
-    val espacioVacio= "."
+fun main() {
+    val espacioVacio = "."
     val galaxia = "#"
-    val espacio = listOf(
-            "....#........\n" +
-            ".........#...\n" +
-            "#............\n" +
-            ".............\n" +
-            ".............\n" +
-            "........#....\n" +
-            ".#...........\n" +
-            "............#\n" +
-            ".............\n" +
-            ".............\n" +
-            ".........#...\n" +
-            "#....#.......")
+    val espacio = readInput("Day11")
 
     val numerosDeGalaxias = buscarGalaxias(espacio, espacioVacio, galaxia)
-
-    println(numerosDeGalaxias)
-
+    val sumaDeLongitudes = calcularSumaDeLongitudes(espacio, numerosDeGalaxias)
+    println(sumaDeLongitudes)
 }
 
-fun buscarGalaxias(espacio: List<String>, espacioVacio : String, galaxia: String) {
-    var contador = 0
-    if (espacio.contains("#")){
-        contador ++
-        println(contador)
+fun buscarGalaxias(espacio: List<String>, espacioVacio: String, galaxia: String): Map<Pair<Int, Int>, Int> {
+    val numerosDeGalaxias = mutableMapOf<Pair<Int, Int>, Int>()
+    var numeroGalaxia = 1
+
+    for (i in espacio.indices) {
+        for (j in espacio[i].indices) {
+            if (espacio[i][j] == galaxia[0]) {
+                numerosDeGalaxias[Pair(i, j)] = numeroGalaxia
+                numeroGalaxia++
+            }
+        }
     }
+
+    return numerosDeGalaxias
 }
 
-fun longitudEntreGalaxias(){}
+fun calcularSumaDeLongitudes(espacio: List<String>, numerosDeGalaxias: Map<Pair<Int, Int>, Int>): Int {
+    val filas = espacio.size
+    val columnas = espacio[0].length
+    var sumaDeLongitudes = 0
+
+    for ((posicion, numero) in numerosDeGalaxias) {
+        for (i in 0 until filas) {
+            for (j in 0 until columnas) {
+                val otraGalaxia = Pair(i, j)
+                val otraNumero = numerosDeGalaxias[otraGalaxia] ?: continue
+
+                if (numero != otraNumero) {
+                    val distancia = calcularDistancia(posicion, otraGalaxia)
+                    sumaDeLongitudes += distancia
+                }
+            }
+        }
+    }
+
+    return sumaDeLongitudes
+}
+
+fun calcularDistancia(galaxia1: Pair<Int, Int>, galaxia2: Pair<Int, Int>): Int {
+    return kotlin.math.abs(galaxia1.first - galaxia2.first) + kotlin.math.abs(galaxia1.second - galaxia2.second)
+}
