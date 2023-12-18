@@ -122,44 +122,62 @@
 // dañadas que cumplen con los criterios dados. ¿Cuál es la suma de esas cuentas?
 
 fun main() {
-    // Ejemplos de filas con fuentes dañadas desconocidas (?)
-    val filas = readInput("Day12")
-    // Calcular la suma total de disposiciones posibles para todas las filas
-    val sumaTotal = filas.sumOf { contarDisposiciones(it) }
+    val entrada = readInput("Day12")
+    var total = 0
 
-    println("La suma total de disposiciones es: $sumaTotal")
-}
+    for (linea in entrada) {
+        val (registro, grupos) = analizarDatos(linea)
 
-// Función para contar las disposiciones posibles en una fila
-fun contarDisposiciones(fila: String): Int {
-    // Dividir la fila en la parte de las fuentes y la parte de los grupos dañados
-    val partes = fila.split(" ")
-    val fuentes = partes[0]
-    val grupos = partes[1]
-
-    // Calcular las disposiciones posibles
-    return contarDisposicionesRecursivo(fuentes, grupos.split(",").map { it.toInt() })
-}
-
-// Función recursiva para contar disposiciones posibles
-fun contarDisposicionesRecursivo(fuentesRestantes: String, grupos: List<Int>): Int {
-    // Caso base: no hay más grupos, solo una disposición posible
-    if (grupos.isEmpty()) return 1
-
-    // Tomar el primer grupo de la lista
-    val grupoActual = grupos[0]
-    val restoGrupos = grupos.drop(1)
-
-    // Caso 1: Colocar fuentes operativas antes del grupo actual
-    val disposicionesConOperativas = contarDisposicionesRecursivo(fuentesRestantes, restoGrupos)
-
-    // Caso 2: Colocar fuentes dañadas antes del grupo actual
-    val disposicionesConDanadas = if (fuentesRestantes.length >= grupoActual) {
-        contarDisposicionesRecursivo(fuentesRestantes.substring(grupoActual), restoGrupos)
-    } else {
-        0
+        val registroConPuntos = "." + registro + "."
+        total += busquedaEnProfundidad(registroConPuntos, grupos)
     }
 
-    // Sumar los resultados de los casos 1 y 2
-    return disposicionesConOperativas + disposicionesConDanadas
+    println("La suma total de disposiciones es $total")
+}
+
+// Función para analizar los datos de la línea y devolver un par de valores
+fun analizarDatos(linea: String): Pair<String, List<Int>> {
+    val (registro, gruposStr) = linea.split(" ")
+    val grupos = gruposStr.split(",").map { it.toInt() }
+    return Pair(registro, grupos)
+}
+
+// Función de búsqueda en profundidad (dfs)
+fun busquedaEnProfundidad(registro: String, grupos: List<Int>): Int {
+    if (grupos.isEmpty()) {
+        return if ('#' in registro) 0 else 1
+    }
+
+    val tamanio = grupos[0]
+    val restanteGrupos = grupos.drop(1)
+
+    var contador = 0
+
+    for (inicio in 0..registro.length - tamanio) {
+        val fin = inicio + tamanio - 1
+        if (encaja(registro, inicio, fin)) {
+            contador += busquedaEnProfundidad(registro.substring(fin + 1), restanteGrupos)
+        }
+    }
+    return contador
+}
+
+// Función para verificar si la configuración encaja
+fun encaja(s: String, inicio: Int, fin: Int): Boolean {
+    if (inicio < 1 || fin >= s.length - 1) {
+        return false
+    }
+    if (s[inicio - 1] == '#' || s[fin + 1] == '#') {
+        return false
+    }
+
+    if ('#' in s.substring(0, inicio)) {
+        return false
+    }
+    for (i in inicio..fin) {
+        if (s[i] == '.') {
+            return false
+        }
+    }
+    return true
 }
