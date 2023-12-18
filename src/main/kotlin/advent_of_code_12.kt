@@ -181,3 +181,5 @@ fun encaja(s: String, inicio: Int, fin: Int): Boolean {
     }
     return true
 }
+
+// --- Parte 2 -----
