@@ -310,7 +310,7 @@ fun calcularNumeroDePasos(boceto: List<String>): Int {
 // Aquí solo se marcan las casillas que están encerradas por el bucle con I:
 
 // FF7FSF7F7F7F7F7F---7
-// L|LJ||||||||||||F--J
+// L||LJ|||||||||||F--J
 // FL-7LJLJ||||||LJL-77
 // F--JF--7||LJLJIF7FJ-
 // L---JF-JLJIIIIFJLJJ7
