@@ -108,9 +108,9 @@
 // galaxia 5 a la galaxia 9 (los ocho lugares marcados con # más el paso a la propia
 // galaxia 9). He aquí otros ejemplos de caminos más cortos:
 
-//Entre la galaxia 1 y la galaxia 7: 15
-//Entre la galaxia 3 y la galaxia 6: 17
-//Entre la galaxia 8 y la galaxia 9: 5
+// Entre la galaxia 1 y la galaxia 7: 15
+// Entre la galaxia 3 y la galaxia 6: 17
+// nEntre la galaxia 8 y la galaxia 9: 5
 
 // En este ejemplo, después de expandir el universo, la suma del camino más corto entre
 // los 36 pares de galaxias es 374.
@@ -118,3 +118,36 @@
 // Expande el universo y luego halla la longitud del camino más corto entre cada par de
 // galaxias. ¿Cuál es la suma de estas longitudes?
 
+fun main(){
+
+    val espacioVacio= "."
+    val galaxia = "#"
+    val espacio = listOf(
+            "....#........\n" +
+            ".........#...\n" +
+            "#............\n" +
+            ".............\n" +
+            ".............\n" +
+            "........#....\n" +
+            ".#...........\n" +
+            "............#\n" +
+            ".............\n" +
+            ".............\n" +
+            ".........#...\n" +
+            "#....#.......")
+
+    val numerosDeGalaxias = buscarGalaxias(espacio, espacioVacio, galaxia)
+
+    println(numerosDeGalaxias)
+
+}
+
+fun buscarGalaxias(espacio: List<String>, espacioVacio : String, galaxia: String) {
+    var contador = 0
+    if (espacio.contains("#")){
+        contador ++
+        println(contador)
+    }
+}
+
+fun longitudEntreGalaxias(){}
