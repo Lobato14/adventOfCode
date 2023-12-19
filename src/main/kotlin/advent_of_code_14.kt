@@ -88,9 +88,10 @@ fun main() {
 
     // Proceso Parte 2
     // val plataformaParte2 = input.map { it.toCharArray().toTypedArray() }.toTypedArray()
-    // val pesoParte2 = ejecutarCicloGiro(plataformaParte2, 1000000000)
+    //val pesoParte2 = ejecutarCicloGiro(plataformaParte2, 1000000000)
+
     // Salida Parte 2
-    // println("Parte 2 total después de 1000000000 ciclos: $pesoParte2")
+    ///println("Parte 2 total después de 1000000000 ciclos: $pesoParte2")
 }
 
 fun calcularPeso(plataforma: Array<Array<Char>>): Int {
@@ -175,3 +176,4 @@ fun calcularPeso(plataforma: Array<Array<Char>>): Int {
 
 // Ejecuta el ciclo de giro durante 1000000000 ciclos. Después, ¿cuál es la carga total en las vigas
 // de soporte norte?
+
