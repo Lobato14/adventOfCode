@@ -44,11 +44,10 @@ fun main() {
 
     val puzles = readInput("Day01")
     val sumaDeValoresParte1 = calcularCalibracionDeValores(puzles)
-
-    val sumaDeValoresParte2 = ""
+    val result = resolverParte2(puzles)
 
     println("La suma de todos los valores es: $sumaDeValoresParte1")
-
+    println("La suma de todos los valores (Parte 2) es: $result")
 }
 
 fun calcularCalibracionDeValores(listaDeCadenas: List<String>): Int {
@@ -91,30 +90,42 @@ fun calcularCalibracionDeValores(listaDeCadenas: List<String>): Int {
 
 // ¿Cuál es la suma de todos los valores de calibración?
 
-fun calcularCalibracionDeValores2(listaDeCadenas: List<String>): Int {
+val digitosNumericos = mapOf(
+    "1" to "1",
+    "2" to "2",
+    "3" to "3",
+    "4" to "4",
+    "5" to "5",
+    "6" to "6",
+    "7" to "7",
+    "8" to "8",
+    "9" to "9"
+)
+val textosNumericos = mapOf(
+    "one" to "1",
+    "two" to "2",
+    "three" to "3",
+    "four" to "4",
+    "five" to "5",
+    "six" to "6",
+    "seven" to "7",
+    "eight" to "8",
+    "nine" to "9"
+)
 
-    val listaPalabrasNumeros = mutableListOf<Int>()
-    val dicNumeros = mapOf("one" to 1, "two" to 2, "three" to 3, "four" to 4, "five" to 5,
-        "six" to 6, "seven" to 7, "eight" to 8, "nine" to 9)
+fun primerNumero(input: String, t: List<String>): String {
+    val found = input.findAnyOf(t) ?: (Int.MAX_VALUE to "")
+    return found.second
+}
 
-    for (linea in listaDeCadenas) {
-        var numerosLinea = ""
-        var cadenaNumero = ""
-        for (caracter in linea) {
-            if (caracter.isDigit()) {
-                numerosLinea += caracter
-            }
-            if (cadenaNumero in dicNumeros){
+fun calibrarNumero(input: String, numbers: Map<String, String>): Int {
+    var number: String = ""
+    val first = numbers[primerNumero(input, numbers.keys.toList())]
+    val last = numbers[primerNumero(input.reversed(), numbers.keys.map { it.reversed() }).reversed()]
+    number += first + last
+    return ("" + number.first() + number.last()).toInt().also { res -> println("$input -> $res") }
+}
 
-            }
-        }
-
-
-        val primerDigito = numerosLinea.first()
-        val segundoDigito = numerosLinea.last()
-        val digitoCreado = "$primerDigito$segundoDigito".toInt()
-        listaPalabrasNumeros.add(digitoCreado)
-
-    }
-    return listaPalabrasNumeros.sum()
+fun resolverParte2(input: List<String>): Int {
+    return input.sumOf { calibrarNumero(it, digitosNumericos + textosNumericos) }
 }
