@@ -76,10 +76,18 @@
 // Inclina la plataforma para que todas las rocas redondas rueden hacia el norte. Después, ¿cuál es la
 // carga total en las vigas de soporte del norte?
 
-import java.io.File
-
 fun main() {
-    val plataforma = leerEntrada().lines().map { it.toCharArray().toTypedArray() }.toTypedArray()
+
+    // Entrada
+    val input = readInput("Day14")
+    // Proceso
+    val plataforma = input.map { it.toCharArray().toTypedArray() }.toTypedArray()
+    val peso = calcularPeso(plataforma)
+    // Salida
+    println("Parte 1 total: $peso")
+}
+
+fun calcularPeso(plataforma: Array<Array<Char>>): Int {
     var peso = 0
 
     for (y in plataforma.indices) {
@@ -96,10 +104,69 @@ fun main() {
         }
     }
 
-    println("Carga total: $peso")
+    return peso
 }
 
-fun leerEntrada(): String {
-    // Ajusta la ruta del archivo según sea necesario
-    return File("src/Day14.txt").readText().trim()
-}
+// ---- Parte 2 -----
+
+// El plato reflector parabólico se deforma, pero no de una manera que enfoque el haz. Para lograr
+// eso, necesitarás mover las rocas hacia los bordes de la plataforma. Afortunadamente, un botón en
+// el lateral del panel de control etiquetado como "ciclo de giro" intenta hacer precisamente eso.
+
+// Cada ciclo inclina la plataforma cuatro veces para que las rocas redondas rueden hacia el norte,
+// luego hacia el oeste, luego hacia el sur y finalmente hacia el este. Después de cada inclinación,
+// las rocas redondas ruedan tanto como pueden antes de que la plataforma se incline en la siguiente
+// dirección. Después de un ciclo, la plataforma habrá terminado de rodar las rocas redondas en esas
+// cuatro direcciones en ese orden.
+
+// Esto es lo que sucede en el ejemplo anterior después de los primeros ciclos:
+
+// Después de 1 ciclo:
+
+// .....#....
+// ....#...O#
+// ...OO##...
+// .OO#......
+// .....OOO#.
+// .O#...O#.#
+// ....O#....
+// ......OOOO
+// #...O###..
+// #..OO#....
+
+// Después de 2 ciclos:
+
+// .....#....
+// ....#...O#
+// .....##...
+// ..O#......
+// .....OOO#.
+// .O#...O#.#
+// ....O#...O
+// .......OOO
+// #..OO###..
+// #.OOO#...O
+
+// Después de 3 ciclos:
+
+// .....#....
+// ....#...O#
+// .....##...
+// ..O#......
+// .....OOO#.
+// .O#...O#.#
+// ....O#...O
+// .......OOO
+// #...O###.O
+// #.OOO#...O
+
+// Este proceso debería funcionar si lo dejas funcionando el tiempo suficiente, pero aún te preocupa
+// las vigas de soporte norte. Para asegurarte de que sobrevivan por un tiempo, necesitas calcular
+// la carga total en las vigas de soporte norte después de 1000000000 ciclos.
+
+// En el ejemplo anterior, después de 1000000000 ciclos, la carga total en las vigas de soporte norte
+// es 64.
+
+// Ejecuta el ciclo de giro durante 1000000000 ciclos. Después, ¿cuál es la carga total en las vigas
+// de soporte norte?
+
