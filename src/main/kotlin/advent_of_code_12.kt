@@ -123,6 +123,8 @@
 
 fun main() {
     val entrada = readInput("Day12")
+
+    // Parte 1
     var total = 0
 
     for (linea in entrada) {
@@ -133,6 +135,7 @@ fun main() {
     }
 
     println("La suma total de disposiciones es $total")
+
 }
 
 // Función para analizar los datos de la línea y devolver un par de valores
@@ -201,6 +204,7 @@ fun encaja(s: String, inicio: Int, fin: Int): Boolean {
 // La primera línea del ejemplo anterior sería:
 
 // ???.###????.###????.###????.###????.### 1,1,3,1,1,3 ,1,1,3,1,1,3,1,1,3
+
 // En el ejemplo anterior, después del despliegue, el número de disposiciones posibles para algunas
 // filas ahora es mucho mayor:
 
@@ -213,4 +217,4 @@ fun encaja(s: String, inicio: Int, fin: Int): Boolean {
 
 // Después de desplegar, sumar todos los recuentos de arreglos posibles produce 525152.
 
-//Despliegue sus registros de condición; ¿Cuál es la nueva suma de posibles recuentos de arreglos?
+// Despliegue sus registros de condición; ¿Cuál es la nueva suma de posibles recuentos de arreglos?
