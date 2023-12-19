@@ -1,6 +1,8 @@
 
 // --- Día 1: ¿¡Trabuco?! ---
 
+// -- Parte 1 ---
+
 // Algo está mal con la producción global de nieve, y te han seleccionado para echar un vistazo. Los Elfos
 // incluso te han proporcionado un mapa; en él, han utilizado estrellas para marcar los cincuenta lugares
 // principales que probablemente tengan problemas.
@@ -41,8 +43,11 @@
 fun main() {
 
     val puzles = readInput("Day01")
-    val sumaDeValores = calcularCalibracionDeValores(puzles)
-    println("La suma de todos los valores es: $sumaDeValores")
+    val sumaDeValoresParte1 = calcularCalibracionDeValores(puzles)
+
+    val sumaDeValoresParte2 = ""
+
+    println("La suma de todos los valores es: $sumaDeValoresParte1")
 
 }
 
@@ -63,4 +68,53 @@ fun calcularCalibracionDeValores(listaDeCadenas: List<String>): Int {
 
     }
     return listaDigitos.sum()
+}
+
+// ---- Parte 2 ------
+
+// Tu cálculo no es del todo correcto. Parece que algunos de los dígitos en realidad están escritos con
+//  letras: uno, dos, tres, cuatro, cinco, seis, siete, ocho y nueve también cuentan como "dígitos"
+//  válidos.
+
+// Equipado con esta nueva información, ahora necesita encontrar el primer y último dígito real en
+// cada línea. Por ejemplo:
+
+// two1nine
+// eightwothree
+// abcone2threexyz
+// xtwone3four
+// 4nineeightseven2
+// zoneight234
+// 7pqrstsixteen
+
+// En este ejemplo, los valores de calibración son 29, 83, 13, 24, 42, 14 y 76. Sumarlos produce 281.
+
+// ¿Cuál es la suma de todos los valores de calibración?
+
+fun calcularCalibracionDeValores2(listaDeCadenas: List<String>): Int {
+
+    val listaPalabrasNumeros = mutableListOf<Int>()
+    val dicNumeros = mapOf("one" to 1, "two" to 2, "three" to 3, "four" to 4, "five" to 5,
+        "six" to 6, "seven" to 7, "eight" to 8, "nine" to 9)
+
+    for (linea in listaDeCadenas) {
+        var numerosLinea = ""
+        var cadenaNumero = ""
+        for (caracter in linea) {
+            if (caracter.isDigit()) {
+                numerosLinea += caracter
+            }
+            if (cadenaNumero in dicNumeros){
+
+            }
+        }
+
+
+        val primerDigito = numerosLinea.first()
+        val segundoDigito = numerosLinea.last()
+        val digitoCreado = "$primerDigito$segundoDigito".toInt()
+        listaPalabrasNumeros.add(digitoCreado)
+
+    }
+    return listaPalabrasNumeros.sum()
 }

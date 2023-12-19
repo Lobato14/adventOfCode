@@ -183,3 +183,34 @@ fun encaja(s: String, inicio: Int, fin: Int): Boolean {
 }
 
 // --- Parte 2 -----
+
+// Al mirar el campo de manantiales, siente que hay muchos más manantiales que los que figuran en la lista
+// de registros de condición. Cuando examinas los registros, descubres que en realidad estuvieron doblados
+// todo este tiempo.
+
+// Para desplegar los registros, en cada fila, reemplace la lista de condiciones del resorte con cinco
+// copias de sí mismo (separadas por ?) y reemplace la lista de grupos contiguos de resortes dañados
+// con cinco copias de sí mismo (separadas por ,).
+
+// Entonces, esta fila:
+
+// .# 1
+// Se convertiría:
+
+// .#?.#?.#?.#?.# 1,1,1,1,1
+// La primera línea del ejemplo anterior sería:
+
+// ???.###????.###????.###????.###????.### 1,1,3,1,1,3 ,1,1,3,1,1,3,1,1,3
+// En el ejemplo anterior, después del despliegue, el número de disposiciones posibles para algunas
+// filas ahora es mucho mayor:
+
+// ???.### 1,1,3 - 1 arreglo
+// .??..??...?##. 1,1,3 - 16384 arreglos
+// ?#?#?#?#?#?#?#? 1,3,1,6 - 1 disposición
+// ????.#...#... 4,1,1 - 16 arreglos
+// ????.######..#####. 1,6,5 - 2500 arreglos
+// ?###????????? 3,2,1 - 506250 arreglos
+
+// Después de desplegar, sumar todos los recuentos de arreglos posibles produce 525152.
+
+//Despliegue sus registros de condición; ¿Cuál es la nueva suma de posibles recuentos de arreglos?
