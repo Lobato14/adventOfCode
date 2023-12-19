@@ -77,14 +77,20 @@
 // carga total en las vigas de soporte del norte?
 
 fun main() {
-
     // Entrada
     val input = readInput("Day14")
-    // Proceso
+
+    // Proceso Parte 1
     val plataforma = input.map { it.toCharArray().toTypedArray() }.toTypedArray()
     val peso = calcularPeso(plataforma)
-    // Salida
+    // Salida Parte 1
     println("Parte 1 total: $peso")
+
+    // Proceso Parte 2
+    // val plataformaParte2 = input.map { it.toCharArray().toTypedArray() }.toTypedArray()
+    // val pesoParte2 = ejecutarCicloGiro(plataformaParte2, 1000000000)
+    // Salida Parte 2
+    // println("Parte 2 total después de 1000000000 ciclos: $pesoParte2")
 }
 
 fun calcularPeso(plataforma: Array<Array<Char>>): Int {
@@ -169,4 +175,3 @@ fun calcularPeso(plataforma: Array<Array<Char>>): Int {
 
 // Ejecuta el ciclo de giro durante 1000000000 ciclos. Después, ¿cuál es la carga total en las vigas
 // de soporte norte?
-
