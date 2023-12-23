@@ -102,21 +102,31 @@ fun main() {
         return currentValue
     }
 
-    fun String.removeEmptyLines(): String {
-        val regex = Regex("\n\\s*\n")
-        return this.replace(regex, "")
-    }
-
     fun part1(input: List<String>): Int {
         return input[0].split(",").sumOf {
-            miHash(it.removeEmptyLines().trim())
+            miHash(it.trim())
         }
     }
 
-    fun printList(input: List<String>) {
-        input.forEach { println(it) }
-    }
+    fun part2(instructions: List<String>): Int {
+        val boxes = List<MutableMap<String, Int>>(256) { mutableMapOf() }
 
+        instructions.flatMap { it.split(",") }.forEach { instruction ->
+            if (instruction.endsWith("-")) {
+                val label = instruction.substringBefore('-')
+                boxes[miHash(label)].remove(label)
+            } else {
+                val label = instruction.substringBefore('=')
+                boxes[miHash(label)][label] = instruction.substringAfter("=").toInt()
+            }
+        }
+
+        return boxes.withIndex().sumOf { (boxNumber, lenses) ->
+            lenses.values.withIndex().sumOf { (lensNumber, lens) ->
+                (boxNumber + 1) * (lensNumber + 1) * lens
+            }
+        }
+    }
 
     // Parte 1 --- Realizada ----
     val testInput = readInput("Day15_test")
@@ -125,15 +135,24 @@ fun main() {
     println("Test passed!")
 
     println("Input for part 1:")
-    printList(testInput)
+    testInput.forEach { println(it) }
 
     val input = readInput("Day15")
     println("Part 1 result: ${part1(input)}")
 
-    // println("Part 2 result: ${part2(input)}")
+    // Parte 2 --- Realizada ----
+    val testInput2 = readInput("Day15_test")
+    check(part2(testInput2) == 145)
+
+    println("Test passed!")
+
+    println("Input for part 2:")
+    testInput2.forEach { println(it) }
+
+    val input2 = readInput("Day15")
+    println("Part 2 result: ${part2(input2)}")
 }
 
-// --- Parte 2 ----
 
 // Te convinces de que los renos te traigan la página; la página confirma que tu algoritmo HASH está funcionando.
 
