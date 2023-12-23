@@ -86,65 +86,158 @@
 // analizando la situación actual. Con el haz comenzando en la esquina superior izquierda y dirigiéndose hacia la
 // derecha, ¿cuántas baldosas terminan siendo energizadas?
 
-fun main() {
-    val input = """
-        .|...\....
-        |.-.\.....
-        .....|-...
-        ........|.
-        ..........
-        .........\
-        ..../.\\..
-        .-.-/..|..
-        .|....-|.\
-        ..//.|....
-    """.trimIndent()
 
-    val energizedTiles = countEnergizedTiles(input)
-    println("Número de baldosas energizadas: $energizedTiles")
+fun main() {
+    // Variables de los movimientos posibles
+    val derecha = Pair(1, 0)
+    val izquierda = Pair(-1, 0)
+    val arriba = Pair(0, -1)
+    val abajo = Pair(0, 1)
+
+    // Mapa con todos los movimientos disponibles
+    val movimientos = mapOf(
+        Pair(".", derecha) to listOf(derecha),
+        Pair(".", izquierda) to listOf(izquierda),
+        Pair(".", arriba) to listOf(arriba),
+        Pair(".", abajo) to listOf(abajo),
+
+        Pair("-", derecha) to listOf(derecha),
+        Pair("-", izquierda) to listOf(izquierda),
+        Pair("-", arriba) to listOf(izquierda, derecha),
+        Pair("-", abajo) to listOf(izquierda, derecha),
+
+        Pair("|", derecha) to listOf(arriba, abajo),
+        Pair("|", izquierda) to listOf(arriba, abajo),
+        Pair("|", arriba) to listOf(arriba),
+        Pair("|", abajo) to listOf(abajo),
+
+        Pair("\\", derecha) to listOf(abajo),
+        Pair("\\", izquierda) to listOf(arriba),
+        Pair("\\", arriba) to listOf(izquierda),
+        Pair("\\", abajo) to listOf(derecha),
+
+        Pair("/", derecha) to listOf(arriba),
+        Pair("/", izquierda) to listOf(abajo),
+        Pair("/", arriba) to listOf(derecha),
+        Pair("/", abajo) to listOf(izquierda)
+    )
+
+    val input = readInput("Day16").map { it.toCharArray().toList() }
+
+    // Parte 1
+    val energizadosParte1 = parte1(input, movimientos)
+    println("Parte 1: ${energizadosParte1.size}")
+
+    // Parte 2
+    val maxEnergizadosParte2 = parte2(input, movimientos)
+    println("Parte 2: $maxEnergizadosParte2")
 }
 
-fun countEnergizedTiles(input: String): Int {
-    val lines = input.lines()
+fun parte1(
+    input: List<List<Char>>,
+    movimientos: Map<Pair<String, Pair<Int, Int>>, List<Pair<Int, Int>>>
+): MutableMap<Pair<Int, Int>, MutableSet<Pair<Int, Int>>> {
+    val energizados = mutableMapOf<Pair<Int, Int>, MutableSet<Pair<Int, Int>>>()
 
-    val grid = lines.map { it.toCharArray().toTypedArray() }.toTypedArray()
+    val movimientosHechos = mutableListOf(Pair(Pair(-1, 0), Pair(1, 0)))
 
-    val height = grid.size
-    val width = grid[0].size
+    while (movimientosHechos.isNotEmpty()) {
+        val (posicionHaz, dir) = movimientosHechos.removeAt(0)
+        val (x, y) = Pair(posicionHaz.first + dir.first, posicionHaz.second + dir.second)
 
-    val visited = Array(height) { BooleanArray(width) }
+        if (x in 0 until input[0].size && y in 0 until input.size &&
+            !energizados.getOrPut(Pair(x, y)) { mutableSetOf() }.contains(dir)
+        ) {
+            energizados[Pair(x, y)]?.add(dir)
 
-    fun dfs(x: Int, y: Int) {
-        if (x < 0 || x >= width || y < 0 || y >= height || visited[y][x] || grid[y][x] == '.') {
-            return
-        }
-
-        visited[y][x] = true
-
-        when (grid[y][x]) {
-            '-' -> {
-                dfs(x + 1, y)
-                dfs(x - 1, y)
-            }
-            '|' -> {
-                dfs(x, y + 1)
-                dfs(x, y - 1)
-            }
-            '\\' -> dfs(x - 1, y + 1)
-            '/' -> dfs(x + 1, y + 1)
-        }
-    }
-
-    var energizedCount = 0
-
-    for (y in 0 until height) {
-        for (x in 0 until width) {
-            if (!visited[y][x] && grid[y][x] != '.') {
-                energizedCount++
-                dfs(x, y)
+            for (nuevaDir in movimientos[Pair(input[y][x].toString(), dir)] ?: error("Movimiento no válido")) {
+                movimientosHechos.add(Pair(Pair(x, y), nuevaDir))
             }
         }
     }
 
-    return energizedCount
+    return energizados
+}
+
+// --- Parte 2 ----
+
+// Mientras tratas de descubrir qué podría estar mal, el reno tira de tu camisa y te lleva a un panel de control
+// cercano. Allí, una colección de botones te permite alinear el artefacto de manera que el rayo entre desde
+// cualquier casilla en el borde y se dirija hacia afuera desde ese borde. (Puedes elegir cualquiera de las dos
+// direcciones para el rayo si comienza en una esquina; por ejemplo, si el rayo comienza en la esquina inferior
+// derecha, puede dirigirse hacia la izquierda o hacia arriba).
+
+// Entonces, el rayo podría comenzar en cualquier casilla en la fila superior (dirigiéndose hacia abajo), en
+// cualquier casilla en la fila inferior (dirigiéndose hacia arriba), en cualquier casilla en la columna más a
+// la izquierda (dirigiéndose hacia la derecha) o en cualquier casilla en la columna más a la derecha
+// (dirigiéndose hacia la izquierda). Para producir lava, necesitas encontrar la configuración que energiza
+// la mayor cantidad de casillas posible.
+
+// En el ejemplo anterior, esto se puede lograr comenzando el rayo en la cuarta casilla desde la izquierda en la
+// fila superior:
+
+// .|<2<....
+// |v-v^....
+// .v.v.|->>>
+// .v.v.v^.|.
+// .v.v.v^...
+// .v.v.v^..
+// .v.v/2\..
+// <-2-/vv|..
+// .|<<<2-|.
+// .v//.|.v..
+
+// Utilizando esta configuración, se energizan 51 casillas:
+
+// .#####....
+// .#.#.#....
+// .#.#.#####
+// .#.#.##...
+// .#.#.##...
+// .#.#.##...
+// .#.#####..
+// ########..
+// .#######..
+// .#...#.#..
+
+// Encuentra la configuración inicial del rayo que energiza el mayor número de casillas; ¿cuántas casillas se
+// energizan en esa configuración?
+
+fun parte2(
+    input: List<List<Char>>,
+    movimientos: Map<Pair<String, Pair<Int, Int>>, List<Pair<Int, Int>>>
+): Int {
+
+    var maxEnergizadosActual = -1
+
+    val inicioHaces = mutableListOf(
+        Pair(Pair(-1, 0), Pair(1, 0)),
+        Pair(Pair(input[0].size, 0), Pair(-1, 0)),
+        Pair(Pair(0, -1), Pair(0, 1)),
+        Pair(Pair(0, input.size), Pair(0, -1))
+    )
+
+    for (inicioHaz in inicioHaces) {
+        val tempEnergizados = mutableMapOf<Pair<Int, Int>, MutableSet<Pair<Int, Int>>>()
+        val tempHaces = mutableListOf(inicioHaz)
+
+        while (tempHaces.isNotEmpty()) {
+            val (posicionHaz, dir) = tempHaces.removeAt(0)
+            val (x, y) = Pair(posicionHaz.first + dir.first, posicionHaz.second + dir.second)
+
+            if (x in 0 until input[0].size && y in 0 until input.size &&
+                !tempEnergizados.getOrPut(Pair(x, y)) { mutableSetOf() }.contains(dir)
+            ) {
+                tempEnergizados[Pair(x, y)]?.add(dir)
+
+                for (nuevaDir in movimientos[Pair(input[y][x].toString(), dir)] ?: error("Movimiento no válido")) {
+                    tempHaces.add(Pair(Pair(x, y), nuevaDir))
+                }
+            }
+        }
+
+        maxEnergizadosActual = maxOf(maxEnergizadosActual, tempEnergizados.size)
+    }
+
+    return maxEnergizadosActual
 }
