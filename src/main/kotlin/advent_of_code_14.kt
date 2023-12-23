@@ -177,3 +177,4 @@ fun calcularPeso(plataforma: Array<Array<Char>>): Int {
 // Ejecuta el ciclo de giro durante 1000000000 ciclos. Después, ¿cuál es la carga total en las vigas
 // de soporte norte?
 
+
