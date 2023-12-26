@@ -77,43 +77,43 @@
 // Dirigiendo el crisol desde la piscina de lava hasta la fábrica de piezas de la máquina, pero sin moverse más de
 // tres bloques consecutivos en la misma dirección, ¿cuál es la pérdida de calor mínima que puede sufrir?
 
-fun calculateHeatLoss(map: List<String>, path: String): Int {
-    val moves = path.toCharArray()
-    var heatLoss = 0
+fun calcularPerdidaDeCalor(mapa: List<String>, camino: String): Int {
+    val movimientos = camino.toCharArray()
+    var perdidaDeCalor = 0
     var x = 0
     var y = 0
 
-    val maxX = map.size - 1
-    val maxY = map[0].length - 1
+    val maxX = mapa.size - 1
+    val maxY = mapa[0].length - 1
 
-    for (move in moves) {
-        when (move) {
+    for (movimiento in movimientos) {
+        when (movimiento) {
             'v' -> {
-                heatLoss += map[x][y].toString().toInt()
+                perdidaDeCalor += mapa[x][y].toString().toInt()
                 x = minOf(maxX, x + 1)
             }
             '^' -> {
-                heatLoss += map[x][y].toString().toInt()
+                perdidaDeCalor += mapa[x][y].toString().toInt()
                 x = maxOf(0, x - 1)
             }
             '>' -> {
-                heatLoss += map[x][y].toString().toInt()
+                perdidaDeCalor += mapa[x][y].toString().toInt()
                 y = minOf(maxY, y + 1)
             }
             '<' -> {
-                heatLoss += map[x][y].toString().toInt()
+                perdidaDeCalor += mapa[x][y].toString().toInt()
                 y = maxOf(0, y - 1)
             }
         }
     }
 
-    return heatLoss
+    return perdidaDeCalor
 }
 
 fun main() {
-    val map = readInput("Day17")
+    val mapa = readInput("Day17")
 
-    val path = "2>>34^>>>1323\n" +
+    val camino = "2>>34^>>>1323\n" +
             "32v>>>35v5623\n" +
             "32552456v>>54\n" +
             "3446585845v52\n" +
@@ -123,10 +123,10 @@ fun main() {
             "36378779796v>\n" +
             "465496798688v\n" +
             "456467998645v\n" +
-            "12246868655v<\n" +
+            "12246868655<v\n" +
             "25465488877v5\n" +
             "43226746555v>"
 
-    val heatLoss = calculateHeatLoss(map, path)
-    println("La pérdida de calor es: $heatLoss")
+    val perdidaDeCalor = calcularPerdidaDeCalor(mapa, camino)
+    println("La pérdida de calor es: $perdidaDeCalor")
 }
