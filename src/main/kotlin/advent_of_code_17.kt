@@ -77,89 +77,56 @@
 // Dirigiendo el crisol desde la piscina de lava hasta la fábrica de piezas de la máquina, pero sin moverse más de
 // tres bloques consecutivos en la misma dirección, ¿cuál es la pérdida de calor mínima que puede sufrir?
 
-fun main() {
-    val map = listOf(
-        "2413432311323",
-        "3215453535623",
-        "3255245654254",
-        "3446585845452",
-        "4546657867536",
-        "1438598798454",
-        "4457876987766",
-        "3637877979653",
-        "4654967986887",
-        "4564679986453",
-        "1224686865563",
-        "2546548887735",
-        "4322674655533"
-    )
+fun calculateHeatLoss(map: List<String>, path: String): Int {
+    val moves = path.toCharArray()
+    var heatLoss = 0
+    var x = 0
+    var y = 0
 
-    val heatLoss = findMinHeatLoss(map)
-    println("La pérdida de calor mínima es: $heatLoss")
+    val maxX = map.size - 1
+    val maxY = map[0].length - 1
+
+    for (move in moves) {
+        when (move) {
+            'v' -> {
+                heatLoss += map[x][y].toString().toInt()
+                x = minOf(maxX, x + 1)
+            }
+            '^' -> {
+                heatLoss += map[x][y].toString().toInt()
+                x = maxOf(0, x - 1)
+            }
+            '>' -> {
+                heatLoss += map[x][y].toString().toInt()
+                y = minOf(maxY, y + 1)
+            }
+            '<' -> {
+                heatLoss += map[x][y].toString().toInt()
+                y = maxOf(0, y - 1)
+            }
+        }
+    }
+
+    return heatLoss
 }
 
-fun findMinHeatLoss(map: List<String>): Int {
-    val rows = map.size
-    val cols = map[0].length
+fun main() {
+    val map = readInput("Day17")
 
-    fun isValidMove(x: Int, y: Int): Boolean {
-        return x in 0 until rows && y in 0 until cols
-    }
+    val path = "2>>34^>>>1323\n" +
+            "32v>>>35v5623\n" +
+            "32552456v>>54\n" +
+            "3446585845v52\n" +
+            "4546657867v>6\n" +
+            "14385987984v4\n" +
+            "44578769877v6\n" +
+            "36378779796v>\n" +
+            "465496798688v\n" +
+            "456467998645v\n" +
+            "12246868655v<\n" +
+            "25465488877v5\n" +
+            "43226746555v>"
 
-    fun calculateHeatLoss(path: List<Char>): Int {
-        var heatLoss = 0
-        var x = 0
-        var y = 0
-
-        for (move in path) {
-            when (move) {
-                'v' -> x++
-                '^' -> x--
-                '>' -> y++
-                '<' -> y--
-            }
-
-            if (!isValidMove(x, y)) {
-                return Int.MAX_VALUE
-            }
-
-            heatLoss += map[x][y].toString().toInt()
-        }
-
-        return heatLoss
-    }
-
-    fun backtrack(x: Int, y: Int, path: List<Char>): Int {
-        return if (x == rows - 1 && y == cols - 1) {
-            calculateHeatLoss(path)
-        } else {
-            val directions = listOf('v', '^', '>', '<')
-            var minHeatLoss = Int.MAX_VALUE
-
-            for (dir in directions) {
-                val newX = x + when (dir) {
-                    'v' -> 1
-                    '^' -> -1
-                    else -> 0
-                }
-
-                val newY = y + when (dir) {
-                    '>' -> 1
-                    '<' -> -1
-                    else -> 0
-                }
-
-                if (isValidMove(newX, newY)) {
-                    val newPath = path.toMutableList().apply { add(dir) }
-                    val heatLoss = backtrack(newX, newY, newPath)
-                    minHeatLoss = minOf(minHeatLoss, heatLoss)
-                }
-            }
-
-            minHeatLoss
-        }
-    }
-
-    val initialPath = emptyList<Char>()
-    return backtrack(0, 0, initialPath)
+    val heatLoss = calculateHeatLoss(map, path)
+    println("La pérdida de calor es: $heatLoss")
 }
